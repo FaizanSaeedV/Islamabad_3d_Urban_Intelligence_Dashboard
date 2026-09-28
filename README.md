@@ -170,7 +170,6 @@ Integration of Sentinel-2 land cover classification, photogrammetric 3D Tiles, r
 ## Attribution and adaptation
 
 Original architecture: **Dilux Logeswaran**, released under the MIT licence.
-Islamabad adaptation: **Faizan Saeed**. 
 
 ## License
 
