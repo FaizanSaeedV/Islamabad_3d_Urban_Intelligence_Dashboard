@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "source": "SYNTHETIC TEST FIXTURE - not real OpenStreetMap data",
+    "purpose": "Unit-testing the processing pipeline (validation, repair, dedupe, bbox filter, height estimation). Never load into the application database.",
+    "crs": "EPSG:4326"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "way/1001",
+      "properties": {"osm_type": "way", "osm_id": 1001, "building": "residential", "building:levels": "4", "name": "Fixture Building A"},
+      "geometry": {"type": "Polygon", "coordinates": [[[73.040, 33.680], [73.041, 33.680], [73.041, 33.681], [73.040, 33.681], [73.040, 33.680]]]}
+    },
+    {
+      "type": "Feature",
+      "id": "way/1002",
+      "properties": {"osm_type": "way", "osm_id": 1002, "building": "commercial", "height": "27.5 m"},
+      "geometry": {"type": "Polygon", "coordinates": [[[73.045, 33.685], [73.046, 33.685], [73.046, 33.686], [73.045, 33.686], [73.045, 33.685]]]}
+    },
+    {
+      "type": "Feature",
+      "id": "way/1003",
+      "properties": {"osm_type": "way", "osm_id": 1003, "building": "yes", "note": "self-intersecting bowtie - must be repaired by make_valid"},
+      "geometry": {"type": "Polygon", "coordinates": [[[73.050, 33.690], [73.051, 33.691], [73.051, 33.690], [73.050, 33.691], [73.050, 33.690]]]}
+    },
+    {
+      "type": "Feature",
+      "id": "way/1001-dup",
+      "properties": {"osm_type": "way", "osm_id": 1001, "building": "residential", "note": "duplicate osm_id - must be dropped"},
+      "geometry": {"type": "Polygon", "coordinates": [[[73.040, 33.680], [73.041, 33.680], [73.041, 33.681], [73.040, 33.681], [73.040, 33.680]]]}
+    },
+    {
+      "type": "Feature",
+      "id": "way/1004",
+      "properties": {"osm_type": "way", "osm_id": 1004, "building": "yes", "note": "outside Islamabad bbox - must be dropped"},
+      "geometry": {"type": "Polygon", "coordinates": [[[74.500, 34.500], [74.501, 34.500], [74.501, 34.501], [74.500, 34.501], [74.500, 34.500]]]}
+    },
+    {
+      "type": "Feature",
+      "id": "way/1005",
+      "properties": {"osm_type": "way", "osm_id": 1005, "building": "apartments", "building:levels": "12", "name": "Fixture Tower"},
+      "geometry": {"type": "Polygon", "coordinates": [[[73.030, 33.670], [73.0305, 33.670], [73.0305, 33.6705], [73.030, 33.6705], [73.030, 33.670]]]}
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+# Render Blueprint - Smart City Digital Twin
+# Backend web service + managed PostgreSQL (free tier).
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: smart-city-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: POSTGRES_HOST
+        fromDatabase: { name: smart-city-db, property: host }
+      - key: POSTGRES_PORT
+        fromDatabase: { name: smart-city-db, property: port }
+      - key: POSTGRES_DB
+        fromDatabase: { name: smart-city-db, property: database }
+      - key: POSTGRES_USER
+        fromDatabase: { name: smart-city-db, property: user }
+      - key: POSTGRES_PASSWORD
+        fromDatabase: { name: smart-city-db, property: password }
+      - key: CORS_ORIGINS
+        value: "https://REPLACE-WITH-YOUR-USERNAME.github.io"
+      - key: OPEN_METEO_BASE_URL
+        value: "https://api.open-meteo.com/v1"
+      - key: OSRM_BASE_URL
+        value: "https://router.project-osrm.org"
+
+databases:
+  - name: smart-city-db
+    plan: free
+    databaseName: smart_city_twin
+    postgresMajorVersion: "15"

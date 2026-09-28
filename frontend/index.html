@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Islamabad 3D Urban Intelligence Digital Twin</title>
+  <meta name="description" content="Open-source 3D urban intelligence and public-service accessibility WebGIS for Islamabad, Pakistan." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Widgets/widgets.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Top navigation bar -->
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-icon">◆</span>
+      <div class="brand-text">
+        <h1>Islamabad Digital Twin</h1>
+        <span class="brand-sub">3D Urban Intelligence WebGIS</span>
+      </div>
+    </div>
+    <div id="search-container">
+      <input id="search-input" type="text" placeholder="Search a place in Islamabad…" autocomplete="off" />
+      <button id="search-btn" title="Search">⌕</button>
+      <ul id="search-results" class="hidden"></ul>
+    </div>
+    <div class="topbar-right">
+      <span id="api-status" class="status-chip status-unknown" title="Backend API connection">API: checking…</span>
+      <button id="btn-fullscreen" class="icon-btn" title="Toggle full screen">⛶</button>
+    </div>
+  </header>
+
+  <!-- Left sidebar: layers / tools / analytics -->
+  <aside id="sidebar">
+    <nav id="sidebar-tabs">
+      <button class="tab-btn active" data-panel="panel-layers" title="Layers">Layers</button>
+      <button class="tab-btn" data-panel="panel-analytics" title="Analytics">Analytics</button>
+      <button class="tab-btn" data-panel="panel-tools" title="GIS Tools">Tools</button>
+      <button class="tab-btn" data-panel="panel-twin" title="Digital Twin">Twin</button>
+    </nav>
+
+    <section id="panel-layers" class="panel active">
+      <h2>Smart City Layers</h2>
+      <div id="layer-list">
+        <p class="panel-note">Layers load after the data pipeline and backend are running (Milestones 2–6).</p>
+      </div>
+    </section>
+
+    <section id="panel-analytics" class="panel">
+      <h2>Urban Analytics</h2>
+      <div id="analytics-content">
+        <p class="panel-note">Dashboard is populated from <code>/api/analytics</code> (Milestone 8).</p>
+      </div>
+    </section>
+
+    <section id="panel-tools" class="panel">
+      <h2>GIS Tools</h2>
+
+      <div class="tool-card">
+        <h3>Nearest Facility</h3>
+        <select id="nearest-type" class="tool-select"></select>
+        <button id="nearest-pick" class="tool-btn">Pick location on map</button>
+        <div id="nearest-results"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>Emergency Response</h3>
+        <p class="panel-note">Set an incident location — nearest hospital, police and
+        fire stations are found with network response routes.</p>
+        <button id="incident-pick" class="tool-btn danger">Set incident location</button>
+        <div id="emergency-results"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>Measurement</h3>
+        <div class="btn-row">
+          <button id="measure-dist" class="tool-btn">Distance</button>
+          <button id="measure-area" class="tool-btn">Area</button>
+          <button id="measure-height" class="tool-btn">Height</button>
+          <button id="measure-clear" class="mini-btn">Clear</button>
+        </div>
+        <div id="measure-out"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>Spatial Query</h3>
+        <select id="query-select" class="tool-select"></select>
+        <div id="query-params" class="query-params"></div>
+        <div class="btn-row">
+          <button id="query-run" class="tool-btn">Run query</button>
+          <button id="query-clear" class="mini-btn">Clear</button>
+        </div>
+        <div id="query-out"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>Building Density</h3>
+        <p class="panel-note">Buildings per 250 m grid cell (EPSG:32643 metric grid).</p>
+        <button id="density-btn" class="tool-btn">Show density grid</button>
+        <div id="density-out"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>Green-Space Accessibility</h3>
+        <button id="access-btn" class="tool-btn">Show accessibility grid</button>
+        <button id="green-pick" class="tool-btn" style="margin-top:6px">Pick a point</button>
+        <div id="access-out"></div>
+        <div id="green-out"></div>
+      </div>
+
+      <div class="tool-card">
+        <h3>Infrastructure Coverage</h3>
+        <select id="coverage-type" class="tool-select">
+          <option value="hospital">Hospitals</option>
+          <option value="fire_station">Fire stations</option>
+          <option value="police_station">Police stations</option>
+          <option value="fuel_station">Fuel stations</option>
+          <option value="ev_charging">EV chargers</option>
+        </select>
+        <select id="coverage-radius" class="tool-select">
+          <option value="500">500 m buffer</option>
+          <option value="1000" selected>1 km buffer</option>
+          <option value="2000">2 km buffer</option>
+          <option value="5000">5 km buffer</option>
+        </select>
+        <button id="coverage-btn" class="tool-btn">Analyse coverage</button>
+        <div id="coverage-out"></div>
+      </div>
+    </section>
+
+    <section id="panel-twin" class="panel">
+      <h2>Digital Twin Simulation</h2>
+      <p class="sim-disclaimer">⚠ Simulated for Digital Twin Demonstration — not official real-time data.</p>
+      <div id="twin-content"></div>
+
+      <div class="tool-card">
+        <h3>Time-Based Demo</h3>
+        <p class="panel-note">Animated demonstration vehicles on real OSM routes
+        (bus and emergency vehicle) with timeline controls.</p>
+        <button id="timeviz-btn" class="tool-btn">Start vehicle animation</button>
+        <p class="panel-note" id="timeviz-status"></p>
+      </div>
+    </section>
+  </aside>
+
+  <!-- Weather card (floating) -->
+  <div id="weather-card" class="floating-card hidden">
+    <h3>Islamabad Weather <span class="weather-attrib">Open-Meteo</span></h3>
+    <div id="weather-body"></div>
+  </div>
+
+  <!-- Cesium container -->
+  <main id="cesiumContainer"></main>
+
+  <!-- Floating camera controls -->
+  <div id="camera-controls">
+    <button id="btn-home" class="cam-btn" title="Reset camera to Islamabad">⌂</button>
+    <button id="btn-north" class="cam-btn" title="Face north">N</button>
+    <button id="btn-2d3d" class="cam-btn" title="Toggle top-down / 3D tilt">3D</button>
+  </div>
+
+  <!-- Attribution / data notice -->
+  <footer id="data-notice">
+    Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> ·
+    Weather by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> ·
+    Simulation layers are demonstration data
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Cesium.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

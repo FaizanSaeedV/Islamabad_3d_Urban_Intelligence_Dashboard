@@ -1,0 +1,419 @@
+/* =========================================================
+   Islamabad 3D Urban Intelligence Digital Twin — UI stylesheet
+   Original dark "control room" theme (not derived from any
+   commercial map product).
+   ========================================================= */
+:root {
+  --bg-0: #0d1220;
+  --bg-1: #131a2c;
+  --bg-2: #1b2540;
+  --line: #2a3655;
+  --text-0: #e8edf7;
+  --text-1: #9fb0ce;
+  --accent: #35c4a2;
+  --accent-2: #4f8ef7;
+  --warn: #f0b23e;
+  --err: #e2604f;
+  --radius: 10px;
+  --topbar-h: 56px;
+  --sidebar-w: 320px;
+  font-size: 15px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  background: var(--bg-0);
+  color: var(--text-0);
+}
+
+/* ---------- Top bar ---------- */
+#topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  background: linear-gradient(180deg, var(--bg-1), rgba(19, 26, 44, 0.92));
+  border-bottom: 1px solid var(--line);
+  z-index: 30;
+}
+
+.brand { display: flex; align-items: center; gap: 10px; min-width: 230px; }
+.brand-icon { color: var(--accent); font-size: 1.4rem; }
+.brand-text h1 { font-size: 1rem; font-weight: 600; letter-spacing: 0.3px; }
+.brand-sub { font-size: 0.7rem; color: var(--text-1); text-transform: uppercase; letter-spacing: 1.5px; }
+
+#search-container { position: relative; flex: 1; max-width: 460px; display: flex; }
+#search-input {
+  flex: 1;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: var(--bg-2);
+  color: var(--text-0);
+  outline: none;
+}
+#search-input:focus { border-color: var(--accent-2); }
+#search-btn {
+  width: 42px;
+  border: 1px solid var(--line);
+  border-left: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--bg-2);
+  color: var(--accent);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+#search-results {
+  position: absolute;
+  top: 40px; left: 0; right: 0;
+  list-style: none;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 40;
+}
+#search-results li { padding: 9px 12px; font-size: 0.85rem; cursor: pointer; border-bottom: 1px solid var(--line); }
+#search-results li:hover { background: var(--bg-2); }
+#search-results li.no-result { color: var(--text-1); cursor: default; }
+
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.status-chip {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  white-space: nowrap;
+}
+.status-ok { color: var(--accent); border-color: var(--accent); }
+.status-warn { color: var(--warn); border-color: var(--warn); }
+.status-err { color: var(--err); border-color: var(--err); }
+.status-unknown { color: var(--text-1); }
+
+.icon-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  color: var(--text-0);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- Sidebar ---------- */
+#sidebar {
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  background: rgba(19, 26, 44, 0.94);
+  border-right: 1px solid var(--line);
+  z-index: 20;
+}
+
+#sidebar-tabs { display: flex; border-bottom: 1px solid var(--line); }
+.tab-btn {
+  flex: 1;
+  padding: 10px 4px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-1);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.tab-btn:hover { color: var(--text-0); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.panel { display: none; padding: 14px; overflow-y: auto; flex: 1; }
+.panel.active { display: block; }
+.panel h2 { font-size: 0.9rem; margin-bottom: 12px; color: var(--text-0); letter-spacing: 0.4px; }
+.panel-note { font-size: 0.8rem; color: var(--text-1); line-height: 1.5; }
+
+.sim-disclaimer {
+  font-size: 0.75rem;
+  color: var(--warn);
+  border: 1px dashed var(--warn);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* ---------- Map & floating elements ---------- */
+#cesiumContainer {
+  position: fixed;
+  top: var(--topbar-h);
+  left: var(--sidebar-w);
+  right: 0;
+  bottom: 0;
+}
+
+.floating-card {
+  position: fixed;
+  top: calc(var(--topbar-h) + 14px);
+  right: 14px;
+  width: 250px;
+  background: rgba(19, 26, 44, 0.94);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  z-index: 25;
+}
+.floating-card h3 { font-size: 0.85rem; display: flex; justify-content: space-between; align-items: baseline; }
+.weather-attrib { font-size: 0.62rem; color: var(--text-1); font-weight: 400; }
+
+#camera-controls {
+  position: fixed;
+  right: 14px;
+  bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 25;
+}
+.cam-btn {
+  width: 40px; height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(19, 26, 44, 0.94);
+  color: var(--text-0);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.cam-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+#data-notice {
+  position: fixed;
+  left: var(--sidebar-w);
+  right: 0;
+  bottom: 0;
+  padding: 4px 12px;
+  font-size: 0.68rem;
+  color: var(--text-1);
+  background: rgba(13, 18, 32, 0.85);
+  z-index: 25;
+}
+#data-notice a { color: var(--accent-2); text-decoration: none; }
+
+.hidden { display: none !important; }
+
+/* ---------- Layer list ---------- */
+.layer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 6px;
+  border-radius: 6px;
+  font-size: 0.84rem;
+  cursor: pointer;
+  user-select: none;
+}
+.layer-item:hover { background: var(--bg-2); }
+.layer-item input { accent-color: var(--accent); }
+.layer-swatch {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  flex: none;
+}
+.layer-name { flex: 1; }
+.layer-count { font-size: 0.7rem; color: var(--text-1); }
+.layer-group-title {
+  margin: 12px 0 4px;
+  font-size: 0.7rem;
+  color: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* ---------- Weather card ---------- */
+.wx-main { display: flex; align-items: baseline; gap: 8px; margin: 6px 0 10px; }
+.wx-icon { font-size: 1.6rem; }
+.wx-temp { font-size: 1.5rem; font-weight: 600; }
+.wx-desc { font-size: 0.78rem; color: var(--text-1); }
+.wx-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.8rem; padding: 3px 0;
+  border-top: 1px solid var(--line);
+}
+.wx-row span { color: var(--text-1); }
+.wx-arrow { display: inline-block; color: var(--accent); font-weight: 700; }
+.wx-footer { font-size: 0.65rem; color: var(--text-1); margin-top: 8px; line-height: 1.4; }
+
+/* ---------- Analytics dashboard ---------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.stat-tile {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px;
+  text-align: center;
+}
+.stat-value { font-size: 1.05rem; font-weight: 600; color: var(--accent); }
+.stat-label { font-size: 0.68rem; color: var(--text-1); margin-top: 2px; }
+
+.chart-block {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px;
+  margin-bottom: 12px;
+}
+.chart-block h3 { font-size: 0.8rem; margin-bottom: 8px; }
+.chart-block canvas { max-height: 220px; }
+
+/* ---------- GIS tool cards ---------- */
+.tool-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.tool-card h3 { font-size: 0.85rem; margin-bottom: 8px; }
+.tool-select {
+  width: 100%;
+  padding: 7px 8px;
+  margin-bottom: 8px;
+  background: var(--bg-1);
+  color: var(--text-0);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.tool-btn {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.tool-btn:hover, .tool-btn.active { background: var(--accent); color: var(--bg-0); }
+.tool-btn.danger { border-color: var(--err); color: var(--err); }
+.tool-btn.danger:hover, .tool-btn.danger.active { background: var(--err); color: #fff; }
+.tool-error { color: var(--err); font-size: 0.8rem; margin-top: 8px; }
+.btn-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.btn-row .tool-btn { width: auto; flex: 1; padding: 7px 6px; font-size: 0.76rem; }
+.query-params { display: flex; gap: 6px; align-items: center; margin: 6px 0; font-size: 0.8rem; color: var(--text-1); }
+.query-params .tool-select { margin-bottom: 0; }
+.query-params input.tool-select { width: 80px; flex: none; }
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 2px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+.result-rank {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  flex: none;
+}
+.result-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.result-dist { color: var(--text-1); white-space: nowrap; }
+.mini-btn {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg-1);
+  color: var(--accent);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.mini-btn:hover { border-color: var(--accent); }
+
+.route-summary {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: var(--bg-1);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.response-card {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: var(--bg-1);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+.mini-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 0.78rem; }
+.mini-table th { text-align: left; color: var(--text-1); font-weight: 500; padding: 2px 8px 2px 0; }
+.mini-table td { padding: 2px 0; }
+
+/* ---------- Attribute tables (Cesium info box uses an iframe; these
+   styles are inlined there via JS, kept here for reference/panels) ---------- */
+.attr-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.attr-table th {
+  text-align: left; padding: 4px 8px 4px 0;
+  color: #9fb0ce; font-weight: 600; white-space: nowrap; vertical-align: top;
+}
+.attr-table td { padding: 4px 0; }
+.attr-note { color: #9fb0ce; font-size: 0.75rem; }
+.attr-footer { font-size: 0.72rem; color: #9fb0ce; margin-top: 8px; }
+
+/* Hide Cesium's own credit bar duplication conflicts (credits shown in footer) */
+.cesium-viewer-bottom { font-size: 0.6rem; }
+
+/* Timeline & clock widgets: hidden unless the time demo is active */
+body:not(.time-active) .cesium-viewer-animationContainer,
+body:not(.time-active) .cesium-viewer-timelineContainer { display: none; }
+body.time-active #data-notice { display: none; }
+
+/* Simulation legend chips */
+.sim-legend { margin: 2px 0 10px 26px; display: flex; flex-wrap: wrap; gap: 6px; }
+.sim-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  color: var(--text-1);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.sim-chip strong { color: var(--text-0); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  :root { --sidebar-w: 0px; }
+  #sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+    transition: transform 0.25s ease;
+  }
+  #sidebar.open { transform: translateX(0); }
+  #cesiumContainer, #data-notice { left: 0; }
+  .brand-text h1 { font-size: 0.85rem; }
+  .brand-sub { display: none; }
+  .floating-card { width: 210px; }
+}
