@@ -15,7 +15,6 @@ This project adapts an open-source 3D city architecture into an urban-intelligen
 
 **Study area:** Islamabad urban area and immediate peri-urban surroundings (approx. bounding box 72.80–73.25 E, 33.60–33.82 N).
 
-**Attribution:** Adapted from Dilux Logeswaran's MIT-licensed [3D Smart City Digital Twin WebGIS](https://github.com/Diluxan-Logeswaran/smart-city-digital-twin). Islamabad-specific configuration, CRS conversion, data processing, interface changes, validation, and additional analysis are maintained in this adaptation.
 
 ## Problem Statement
 
